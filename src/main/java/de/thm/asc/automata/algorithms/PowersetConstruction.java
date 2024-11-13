@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
  * and then creating transitions for every transition for any of the original states in a set to all other relevant subset-states, we can achieve a DFA.
  */
 public class PowersetConstruction {
-    public static FiniteAutomaton apply(FiniteAutomaton nfa) {
+    public static FiniteAutomaton apply(FiniteAutomaton nfa) {    
         return new PowersetConstruction(nfa).construct();
     }
 
@@ -28,19 +28,26 @@ public class PowersetConstruction {
      */
     private Set<State> epsilonClosure(State s) {
         Set<State> result = new HashSet<>();
+        Queue<State> statesToView = new LinkedList<>();
+        Set<State> completedStates = new HashSet<>();
 
         result.add(s);
+        statesToView.add(s);
 
-        Iterator<State> iter = result.iterator(); // this does not work because the set needs to be modified during iteration
+        while (!statesToView.isEmpty()) {
+            State cur = statesToView.remove();
 
-        while (iter.hasNext()) {
-            State cur = iter.next();
             Set<Transition> transitions = nfa.getTransitions(cur);
             transitions.forEach(t -> {
                 if (t.isEpsilonTransition()) {
                     result.add(t.right);
+
+                    if (!completedStates.contains(t.right)) {
+                        statesToView.add(t.right);
+                    }
                 }
             });
+            completedStates.add(cur);
         }
 
         return result;
