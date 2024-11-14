@@ -127,7 +127,7 @@ public record FiniteAutomaton(
 
         sb.append("digraph automata {\n");
         sb.append("    node [shape=doublecircle]; ");
-        sb.append(finalStates.stream().map(State::name).collect(Collectors.joining(",")));
+        sb.append(finalStates.stream().map(State::name).collect(Collectors.joining(" ")));
         sb.append("\n");
         sb.append("    node [shape=point, style=invis]; ENTRY;\n");
         sb.append("    node [shape=circle, style=solid];\n");
